@@ -29,8 +29,8 @@
 
 class Musician {
   static count = 0;
-  #name = "";
-  #instrument = "";
+  #name;
+  #instrument;
   // статичне поле count, яке відслідковує кількість музикантів, початкове значення 0
   // Об'являємо приватні поля #name; #instrument;
 
@@ -117,7 +117,7 @@ musician.play();
  */
 
 class Guitarist extends Musician {
-  #band = "";
+  #band;
   constructor(name, instrument, band) {
     super(name, instrument);
     this.#band = band;
@@ -128,7 +128,7 @@ class Guitarist extends Musician {
   set band(newBand) {
     this.#band = newBand;
   }
-  joinBand() {
+  joinBand(band) {
     this.#band = band;
   }
   play() {
@@ -185,7 +185,7 @@ guitarist.play();
  */
 
 class Bassist extends Musician {
-  #band = "";
+  #band;
   constructor(name, instrument, band) {
     super(name, instrument);
     this.#band = band;
@@ -196,7 +196,7 @@ class Bassist extends Musician {
   set band(newBand) {
     this.#band = newBand;
   }
-  joinBand() {
+  joinBand(band) {
     this.#band = band;
   }
   play() {
@@ -215,31 +215,19 @@ class Bassist extends Musician {
   // метод joinBand, що змінює значення #band,this.#band = band
   // перевизначений метод play(), що виводить рядок в консоль ${super.name} грає на ${super.instrument} в групі ${this.#band}
 }
+
 Object.defineProperty(Musician.prototype, "band", {
   set: function (newBand) {
     this.band = newBand;
   },
 });
+
 // Тут ми використовуємо Object.defineProperty(), щоб додати сетер band до класу Musician після його створення.
 // Перший аргумент - це об'єкт, до якого ми хочемо додати властивість. У цьому випадку це Musician.prototype,
 // тому що ми хочемо додати сетер до всіх екземплярів класу Musician.
 // Другий аргумент - це ім'я властивості, яку ми хочемо додати. У цьому випадку це 'band'.
 // Третій аргумент - це об'єкт, який описує властивість. У цьому випадку ми хочемо додати сетер,
 // тому ми вказуємо функцію, яка буде викликатися при спробі встановити властивість 'band'.  this.band = newBand
-
-class Bassist2 extends Musician {
-  constructor(name, instrument, band) {
-    super(name, instrument);
-    this.band = band;
-  }
-}
-
-const bassist2 = new Bassist(
-  "Paul McCartney 2",
-  "бас-гітара 2",
-  "The Beatles 2"
-);
-bassist2.play();
 
 const bassist = new Bassist("Paul McCartney", "бас-гітара", "The Beatles");
 bassist.play();
@@ -252,35 +240,6 @@ bassist.play();
  * | members     |  array     |
  */
 
-// class Band {
-//   #name = "";
-//   #members = [];
-//   constructor(name, members) {}
-
-//   get(name) {
-//     return this.#name;
-//   }
-//   get(members) {
-//     return this.#members;
-//   }
-//   set name(newName) {
-//     this.#name = newName;
-//   }
-
-//   addMember(newMember) {
-//     if (Musician.prototype.isPrototypeOf(newMember)) {
-//       // newMember.band = this.#name;
-//       this.#members.push(newMember);
-//     } else {
-//       console.log(` Новий учасник повинен бути екземпляром класу Musician`);
-//     }
-//   }
-
-//   playMusic() {
-//     return this.#members.forEach((elem) => elem.play());
-//   }
-// }
-
 class Band {
   #name;
   #members;
@@ -289,10 +248,10 @@ class Band {
     this.#members = [...members];
   }
 
-  get(name) {
+  get name() {
     return this.#name;
   }
-  get(members) {
+  get members() {
     return this.#members;
   }
   set name(newName) {
@@ -330,7 +289,7 @@ class Band {
 
 const band = new Band("The Beatles", [bassist]);
 //guitarist.addMember();
-band.addMember(musician);
+band.addMember(guitarist);
 
 /*
  * Клас: Performance
@@ -346,9 +305,9 @@ class Performance {
   #location;
   #date;
   constructor(band, location, date) {
-    this.band = band;
-    this.location = location;
-    this.date = date;
+    this.#band = band;
+    this.#location = location;
+    this.#date = date;
   }
   get band() {
     return this.#band;
@@ -359,15 +318,7 @@ class Performance {
   get date() {
     return this.#date;
   }
-  set band(newBand) {
-    this.#band = newBand;
-  }
-  set location(newLocation) {
-    this.#location = newLocation;
-  }
-  set date(newDate) {
-    this.#date = newDate;
-  }
+
   info() {
     console.log(
       `Гурт ${this.#band.name} виступить в ${
@@ -395,7 +346,7 @@ class Performance {
  * | ticketPrice |  number    |
  */
 class Concert extends Performance {
-  #ticketPrice = "";
+  #ticketPrice;
   constructor(band, location, date, ticketPrice) {
     super(band, location, date);
     this.#ticketPrice = ticketPrice;
@@ -430,8 +381,8 @@ class Concert extends Performance {
  * | band        |  string    |
  */
 class Vocalist {
-  #name = "";
-  #band = "";
+  #name;
+  #band;
   constructor(name, band) {
     this.#name = name;
     this.#band = band;
@@ -470,7 +421,7 @@ class Vocalist {
  * | #songs       |  array     |
  */
 class SongWriter {
-  #songs = [];
+  #songs;
   constructor(songs) {
     this.#songs = songs;
   }
@@ -478,11 +429,9 @@ class SongWriter {
     return this.#songs;
   }
   addSong(newSong) {
-    if (Musician.isPrototypeOf(newMember)) {
-      this.#songs.push(newSong);
-      console.log(this.#songs);
-    }
+    this.#songs.push(newSong);
   }
+
   info() {
     console.log(`Написав ${this.songs.length} пісень`);
   }
