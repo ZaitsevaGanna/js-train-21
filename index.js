@@ -301,7 +301,7 @@ class Band {
 
   addMember(newMember) {
     if (newMember instanceof Musician) {
-      // newMember.band = this.#name;
+      newMember.band = this.#name;
       this.#members.push(newMember);
     } else {
       console.log(` Новий учасник повинен бути екземпляром класу Musician`);
